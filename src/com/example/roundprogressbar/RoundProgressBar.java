@@ -14,8 +14,8 @@ import com.example.circlepregress.R;
 
 public class RoundProgressBar extends View {
 	
-	//画笔
 	private Paint paint;
+	
 	//环形默认背景颜色
 	private int roundColor;
 	//环形进度背景颜色
@@ -26,15 +26,16 @@ public class RoundProgressBar extends View {
 	private float textSize;
 	//环形进度宽度
 	private float roundWidth;
-	//进度最大值，默认100
-	private int max;
-	//进度值
-	private int progress;
 	//进度文字显示的标识，默认为true
 	private boolean textIsDisplayable;
-	
 	//进度样式，默认为环形样式
 	private int style;
+	//进度最大值，默认100
+	private int max;
+	
+	//进度值
+	private int progress;
+	
 	//环形样式
 	private static final int STROKE = 0;
 	//饼状样式
@@ -56,7 +57,6 @@ public class RoundProgressBar extends View {
 		paint = new Paint();
 		
 		TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundProgressBar);
-		
 		roundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor, Color.RED);
 		roundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor, Color.GREEN);
 		textColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.GREEN);
@@ -65,7 +65,6 @@ public class RoundProgressBar extends View {
 		max = mTypedArray.getInteger(R.styleable.RoundProgressBar_max, 100);
 		textIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
 		style = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);
-		
 		mTypedArray.recycle();
 	}
 	
@@ -74,6 +73,7 @@ public class RoundProgressBar extends View {
 		super.onDraw(canvas);
 		
 		int centre = getWidth() / 2;
+		//绘制内圆
 		int radius = (int) (centre - roundWidth / 2); 
 		paint.setColor(roundColor); 
 		paint.setStyle(Paint.Style.STROKE); 
@@ -81,25 +81,25 @@ public class RoundProgressBar extends View {
 		paint.setAntiAlias(true);  
 		canvas.drawCircle(centre, centre, radius, paint); 
 		
+		//绘制进度值文字
 		paint.setStrokeWidth(0); 
 		paint.setColor(textColor);
 		paint.setTextSize(textSize);
 		paint.setTypeface(Typeface.DEFAULT_BOLD);
-		
 		int percent = progress * 100 / max; 
 		float textWidth = paint.measureText(percent + "%");   
-		
 		if(textIsDisplayable && percent != 0 && style == STROKE){
-			canvas.drawText(percent + "%", centre - textWidth / 2, centre + textSize / 2, paint); 
+			canvas.drawText(percent + "%", centre - textWidth / 2, 
+					centre + textSize / 2, paint); 
 		}
 		
+		//绘制环形（扇形）进度
 		paint.setStrokeWidth(roundWidth); 
 		paint.setColor(roundProgressColor);  
-		
 		if (oval == null) {
-			oval = new RectF(centre - radius, centre - radius, centre + radius, centre + radius); 
+			oval = new RectF(centre - radius, centre - radius,
+					centre + radius, centre + radius); 
 		}
-		
 		switch (style) {
 		case STROKE:
 			paint.setStyle(Paint.Style.STROKE);
